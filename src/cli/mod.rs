@@ -11,7 +11,7 @@ pub struct Cli {
     /// 直近のコマンド履歴から頻出のものを推薦し、登録まで行う。
     ///
     /// `--suggest`が指定されたときのみ履歴を読み取って処理する。
-    #[arg(long, help = "Recommend frequently used commands from recent history")]
+    #[arg(short = 's', long, help = "Recommend frequently used commands from recent history")]
     pub suggest: bool,
 
     /// 登録済みコマンドから部分一致で検索する。
@@ -40,6 +40,7 @@ pub struct Cli {
     ///
     /// 例: `gclip --list` で一覧表示する。
     #[arg(
+        short = 'l',
         long = "list",
         help = "List registered commands",
         conflicts_with_all = ["query", "add", "suggest", "zsh_widget", "init"]
@@ -49,12 +50,12 @@ pub struct Cli {
     /// zsh用の挿入ウィジェットを出力する。
     ///
     /// `gclip --zsh-widget` の出力を `.zshrc` から読み込む。
-    #[arg(long, help = "Print a zsh widget script for line insertion")]
+    #[arg(short = 'w', long, help = "Print a zsh widget script for line insertion")]
     pub zsh_widget: bool,
 
     /// セットアップ用のスクリプトを出力する。
     ///
     /// `gclip --init` の出力を `.zshrc` で評価する。
-    #[arg(long, help = "Print a setup script for shell initialization")]
+    #[arg(short = 'i', long, help = "Print a setup script for shell initialization")]
     pub init: bool,
 }
