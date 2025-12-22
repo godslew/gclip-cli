@@ -52,13 +52,13 @@ fn read_input_line() -> Result<String, String> {
 /// 入力が見えるように一時的に状態を変更する。
 fn enable_tty_echo(tty: &File) -> Option<TtyModeGuard> {
     let fd = tty.as_raw_fd();
-    let mut original = MaybeUninit::<libc::termios>::uninit();
-    let result = unsafe { libc::tcgetattr(fd, original.as_mut_ptr()) };
+    let mut original_termios = MaybeUninit::<libc::termios>::uninit();
+    let result = unsafe { libc::tcgetattr(fd, original_termios.as_mut_ptr()) };
     if result != 0 {
         return None;
     }
 
-    let original = unsafe { original.assume_init() };
+    let original = unsafe { original_termios.assume_init() };
     let mut modified = original;
     modified.c_lflag |= libc::ECHO | libc::ICANON;
     unsafe {
