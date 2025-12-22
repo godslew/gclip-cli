@@ -133,7 +133,7 @@ fn handle_selection(matches: &[String], selection: Option<usize>) -> Result<(), 
 /// 選択されたコマンドを取得する。
 ///
 /// 範囲外の場合はエラーにする。
-fn command_at_index<'a>(matches: &'a [String], index: usize) -> Result<&'a str, String> {
+fn command_at_index(matches: &[String], index: usize) -> Result<&str, String> {
     matches
         .get(index - 1)
         .map(|command| command.as_str())
