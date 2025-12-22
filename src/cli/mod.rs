@@ -47,6 +47,18 @@ pub struct Cli {
     )]
     pub list: bool,
 
+    /// 登録済みコマンドを削除する。
+    ///
+    /// 例: `gclip --rm "git status"` で削除する。
+    #[arg(
+        short = 'r',
+        long = "rm",
+        value_name = "COMMAND",
+        help = "Remove a command from the registry",
+        conflicts_with_all = ["query", "add", "suggest", "list", "zsh_widget", "init"]
+    )]
+    pub remove: Option<String>,
+
     /// zsh用の挿入ウィジェットを出力する。
     ///
     /// `gclip --zsh-widget` の出力を `.zshrc` から読み込む。

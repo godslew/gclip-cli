@@ -4,4 +4,6 @@ pub mod registry;
 pub mod add;
 pub mod search;
 pub mod list;
+pub mod remove;
+pub(crate) mod selection;
 pub mod suggest;

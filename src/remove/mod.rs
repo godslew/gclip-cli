@@ -1,36 +1,20 @@
-mod widget;
-
 use crate::registry::Registry;
 use crate::selection;
+use std::path::Path;
 
-/// 登録済みコマンドから検索する機能。
+/// 登録済みコマンドを削除する機能。
 ///
-/// `gclip <QUERY>` で部分一致検索を行う。
+/// `gclip --rm "query"` で部分一致検索し、選択して削除する。
 pub fn run(query: &str) -> Result<(), String> {
     let matches = Registry::search_commands(query)?;
     ensure_matches(&matches)?;
     print_matches(query, &matches);
 
     let selection =
-        selection::prompt_single_selection(matches.len(), "Select command to insert")?;
+        selection::prompt_single_selection(matches.len(), "Select command to remove")?;
     handle_selection(&matches, selection)?;
     Ok(())
 }
-
-/// zsh用の挿入ウィジェットを出力する。
-///
-/// 生成されたスクリプトを `.zshrc` で読み込む想定。
-pub fn print_zsh_widget() {
-    widget::print_zsh_widget();
-}
-
-/// セットアップ用のスクリプトを標準出力へ出力する。
-///
-/// `.zshrc` から評価されることを想定している。
-pub fn print_init_script() {
-    widget::print_init_script();
-}
-
 
 /// 検索結果が空でないことを確認する。
 ///
@@ -45,7 +29,7 @@ fn ensure_matches(matches: &[String]) -> Result<(), String> {
 
 /// 検索結果を標準エラーへ表示する。
 ///
-/// 標準出力は挿入するコマンドのために空けておく。
+/// 標準出力は結果メッセージのために空けておく。
 fn print_matches(query: &str, matches: &[String]) {
     eprintln!("Matches for \"{query}\":");
     for (index, command) in matches.iter().enumerate() {
@@ -53,10 +37,7 @@ fn print_matches(query: &str, matches: &[String]) {
     }
 }
 
-/// 選択プロンプトを表示し、インデックスを取得する。
-///
-/// 空入力はキャンセル扱いとして `None` を返す。
-/// 選択結果に応じて、出力または実行を行う。
+/// 選択結果に応じて削除処理を行う。
 fn handle_selection(matches: &[String], selection: Option<usize>) -> Result<(), String> {
     let Some(index) = selection else {
         print_cancelled();
@@ -64,7 +45,8 @@ fn handle_selection(matches: &[String], selection: Option<usize>) -> Result<(), 
     };
 
     let command = command_at_index(matches, index)?;
-    print_selected_command(command);
+    let (registry_path, removed) = Registry::remove_command(command)?;
+    print_result(command, removed, &registry_path);
     Ok(())
 }
 
@@ -78,11 +60,15 @@ fn command_at_index(matches: &[String], index: usize) -> Result<&str, String> {
         .ok_or_else(|| format!("out of range: {index}"))
 }
 
-/// 選択されたコマンドを標準出力へ出力する。
+/// 削除結果を標準出力へ表示する。
 ///
-/// 標準出力はこの1行のみとし、シェル側で扱いやすくする。
-fn print_selected_command(command: &str) {
-    println!("{command}");
+/// 削除件数と登録先を明示する。
+fn print_result(command: &str, removed: usize, registry_path: &Path) {
+    if removed == 0 {
+        println!("Not found: \"{command}\"");
+    } else {
+        println!("Removed \"{command}\" from {}", registry_path.display());
+    }
 }
 
 /// キャンセル時のメッセージを標準エラーに出力する。

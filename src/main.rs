@@ -2,6 +2,7 @@ use clap::Parser;
 use gclip_cli::add;
 use gclip_cli::cli;
 use gclip_cli::list;
+use gclip_cli::remove;
 use gclip_cli::search;
 use gclip_cli::suggest;
 
@@ -32,6 +33,10 @@ fn run() -> Result<(), String> {
 
     if cli.list {
         return list::run();
+    }
+
+    if let Some(command) = cli.remove {
+        return remove::run(&command);
     }
 
     if let Some(command) = cli.add {

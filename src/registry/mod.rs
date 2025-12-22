@@ -4,6 +4,7 @@ mod path;
 mod search;
 mod add;
 mod list;
+mod remove;
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -60,6 +61,13 @@ impl Registry {
     /// 登録ファイルがない場合は空配列を返す。
     pub fn list_commands() -> Result<Vec<String>, String> {
         list::list_commands()
+    }
+
+    /// 登録済みコマンドを削除する。
+    ///
+    /// 前後の空白を除去した上で、完全一致で削除する。
+    pub fn remove_command(command: &str) -> Result<(PathBuf, usize), String> {
+        remove::remove_command(command)
     }
 }
 
