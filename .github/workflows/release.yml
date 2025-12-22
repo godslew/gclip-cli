@@ -74,10 +74,19 @@ jobs:
           asset_name: ${{ steps.package.outputs.archive }}
           asset_content_type: application/gzip
 
+      - name: Create Homebrew App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.HOMEBREW_APP_ID }}
+          private-key: ${{ secrets.HOMEBREW_APP_PRIVATE_KEY }}
+          owner: godslew
+          repositories: homebrew-tap
+
       - name: Dispatch to Homebrew tap
         uses: peter-evans/repository-dispatch@v2
         with:
-          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           repository: godslew/homebrew-tap
           event-type: released
           client-payload: |
