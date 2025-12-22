@@ -83,6 +83,9 @@ gclip_insert() {
   local query="$LBUFFER"
   local cmd
 
+  # 入力キューを掃除し、^Gが残って自己挿入されるのを防ぐ。
+  zle -I
+
   if _gclip_pick_command "$query"; then
     cmd="$REPLY"
   else
