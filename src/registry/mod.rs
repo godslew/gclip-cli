@@ -1,6 +1,9 @@
 mod io;
 mod merge;
 mod path;
+mod search;
+mod add;
+mod list;
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -36,6 +39,27 @@ impl Registry {
         }
 
         Ok((registry_path, added))
+    }
+
+    /// 1件のコマンド文字列を登録する。
+    ///
+    /// 空文字列は拒否し、余分な空白は除去する。
+    pub fn add_command(command: &str) -> Result<(PathBuf, usize), String> {
+        add::add_command(command)
+    }
+
+    /// 登録済みコマンドから検索する。
+    ///
+    /// 部分一致で検索し、入力順を保ったまま結果を返す。
+    pub fn search_commands(query: &str) -> Result<Vec<String>, String> {
+        search::search_commands(query)
+    }
+
+    /// 登録済みコマンドを一覧で返す。
+    ///
+    /// 登録ファイルがない場合は空配列を返す。
+    pub fn list_commands() -> Result<Vec<String>, String> {
+        list::list_commands()
     }
 }
 

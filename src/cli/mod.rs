@@ -13,4 +13,48 @@ pub struct Cli {
     /// `--suggest`が指定されたときのみ履歴を読み取って処理する。
     #[arg(long, help = "Recommend frequently used commands from recent history")]
     pub suggest: bool,
+
+    /// 登録済みコマンドから部分一致で検索する。
+    ///
+    /// 例: `gclip git` で "git" を含むコマンドを表示する。
+    #[arg(
+        value_name = "QUERY",
+        help = "Search registered commands by substring",
+        conflicts_with_all = ["add", "suggest", "zsh_widget", "init"]
+    )]
+    pub query: Option<String>,
+
+    /// コマンド文字列を手動で登録する。
+    ///
+    /// 例: `gclip --add "git status"` で登録する。
+    #[arg(
+        short = 'a',
+        long = "add",
+        value_name = "COMMAND",
+        help = "Add a command to the registry",
+        conflicts_with_all = ["query", "suggest", "zsh_widget", "init"]
+    )]
+    pub add: Option<String>,
+
+    /// 登録済みコマンドを一覧表示する。
+    ///
+    /// 例: `gclip --list` で一覧表示する。
+    #[arg(
+        long = "list",
+        help = "List registered commands",
+        conflicts_with_all = ["query", "add", "suggest", "zsh_widget", "init"]
+    )]
+    pub list: bool,
+
+    /// zsh用の挿入ウィジェットを出力する。
+    ///
+    /// `gclip --zsh-widget` の出力を `.zshrc` から読み込む。
+    #[arg(long, help = "Print a zsh widget script for line insertion")]
+    pub zsh_widget: bool,
+
+    /// セットアップ用のスクリプトを出力する。
+    ///
+    /// `gclip --init` の出力を `.zshrc` で評価する。
+    #[arg(long, help = "Print a setup script for shell initialization")]
+    pub init: bool,
 }

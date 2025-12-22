@@ -13,6 +13,9 @@ pub(crate) fn load_registry(path: &Path) -> Result<RegisteredCommands, String> {
 
     let contents =
         fs::read_to_string(path).map_err(|err| format!("failed to read registry file: {err}"))?;
+    if contents.trim().is_empty() {
+        return Ok(RegisteredCommands::default());
+    }
     toml::from_str::<RegisteredCommands>(&contents)
         .map_err(|err| format!("failed to parse registry file: {err}"))
 }

@@ -1,4 +1,7 @@
 pub mod cli;
 pub mod history;
 pub mod registry;
+pub mod add;
+pub mod search;
+pub mod list;
 pub mod suggest;
