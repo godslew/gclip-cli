@@ -89,7 +89,7 @@ gclip_insert() {
     LBUFFER="$original_lbuffer"
     RBUFFER="$original_rbuffer"
     zle -R
-    return
+    return 0
   fi
 
   if [[ -n "$query" && "$original_lbuffer" == *"$query" ]]; then
@@ -99,6 +99,7 @@ gclip_insert() {
   fi
   RBUFFER="$original_rbuffer"
   zle -R
+  return 0
 }
 zle -N gclip_insert
 
