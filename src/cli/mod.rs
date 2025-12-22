@@ -20,7 +20,7 @@ pub struct Cli {
     #[arg(
         value_name = "QUERY",
         help = "Search registered commands by substring",
-        conflicts_with_all = ["add", "suggest", "zsh_widget", "init"]
+        conflicts_with_all = ["add", "suggest", "list", "remove", "zsh_widget", "init", "doctor"]
     )]
     pub query: Option<String>,
 
@@ -32,7 +32,7 @@ pub struct Cli {
         long = "add",
         value_name = "COMMAND",
         help = "Add a command to the registry",
-        conflicts_with_all = ["query", "suggest", "zsh_widget", "init"]
+        conflicts_with_all = ["query", "suggest", "list", "remove", "zsh_widget", "init", "doctor"]
     )]
     pub add: Option<String>,
 
@@ -43,7 +43,7 @@ pub struct Cli {
         short = 'l',
         long = "list",
         help = "List registered commands",
-        conflicts_with_all = ["query", "add", "suggest", "zsh_widget", "init"]
+        conflicts_with_all = ["query", "add", "suggest", "remove", "zsh_widget", "init", "doctor"]
     )]
     pub list: bool,
 
@@ -55,9 +55,20 @@ pub struct Cli {
         long = "rm",
         value_name = "COMMAND",
         help = "Remove a command from the registry",
-        conflicts_with_all = ["query", "add", "suggest", "list", "zsh_widget", "init"]
+        conflicts_with_all = ["query", "add", "suggest", "list", "zsh_widget", "init", "doctor"]
     )]
     pub remove: Option<String>,
+
+    /// 設定/保存場所の確認を行う。
+    ///
+    /// 例: `gclip --doctor` で現在のパスと整合性を確認する。
+    #[arg(
+        short = 'd',
+        long = "doctor",
+        help = "Show configuration paths and registry integrity",
+        conflicts_with_all = ["query", "add", "suggest", "list", "remove", "zsh_widget", "init"]
+    )]
+    pub doctor: bool,
 
     /// zsh用の挿入ウィジェットを出力する。
     ///

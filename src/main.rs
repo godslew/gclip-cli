@@ -1,6 +1,7 @@
 use clap::Parser;
 use gclip_cli::add;
 use gclip_cli::cli;
+use gclip_cli::doctor;
 use gclip_cli::list;
 use gclip_cli::remove;
 use gclip_cli::search;
@@ -31,6 +32,10 @@ fn run() -> Result<(), String> {
         return suggest::run();
     }
 
+    if cli.doctor {
+        return doctor::run();
+    }
+
     if cli.list {
         return list::run();
     }
@@ -47,5 +52,5 @@ fn run() -> Result<(), String> {
         return search::run(&query);
     }
 
-    Ok(())
+    search::run_recent()
 }

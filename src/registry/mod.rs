@@ -5,6 +5,8 @@ mod search;
 mod add;
 mod list;
 mod remove;
+mod doctor;
+mod recent;
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -68,6 +70,27 @@ impl Registry {
     /// 前後の空白を除去した上で、完全一致で削除する。
     pub fn remove_command(command: &str) -> Result<(PathBuf, usize), String> {
         remove::remove_command(command)
+    }
+
+    /// 直近使用コマンドを記録する。
+    ///
+    /// 先頭に追加し、重複は除去する。
+    pub fn record_recent(command: &str) -> Result<(), String> {
+        recent::record_recent(command)
+    }
+
+    /// 直近使用コマンドの一覧を返す。
+    ///
+    /// 保存ファイルがない場合は空配列を返す。
+    pub fn recent_commands(limit: usize) -> Result<Vec<String>, String> {
+        recent::recent_commands(limit)
+    }
+
+    /// 設定/保存場所の確認を行う。
+    ///
+    /// 現在のパスと整合性の診断結果を返す。
+    pub fn doctor_report() -> Result<crate::doctor::DoctorReport, String> {
+        doctor::doctor_report()
     }
 }
 

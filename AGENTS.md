@@ -19,4 +19,4 @@ No testing framework is set up yet. Unit tests live in a test-only submodule fol
 There is no commit history yet, so no established convention. Use concise, imperative messages (e.g., “Add suggest registry in TOML”). For pull requests, include a short summary, the commands you ran, and any behavioral changes (CLI flags, file locations).
 
 ## Configuration & Data Locations
-This tool is macOS-only and reads history from `~/.zsh_history`. Persistent data is stored under `~/.gclip/`, currently `~/.gclip/registered.toml`. If you change data formats or locations, update the docs and migration notes.
+This tool is macOS-only and reads history from `~/.zsh_history`. Persistent data is stored under `~/.gclip/`, currently `~/.gclip/registered.toml` and `~/.gclip/recent.toml`. If you change data formats or locations, update the docs and migration notes.

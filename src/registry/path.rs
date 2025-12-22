@@ -16,6 +16,13 @@ pub(crate) fn registry_path(data_dir: &Path) -> PathBuf {
     data_dir.join("registered.toml")
 }
 
+/// 直近使用コマンドの保存先パスを組み立てる。
+///
+/// `recent.toml` を `~/.gclip` 直下に配置する。
+pub(crate) fn recent_path(data_dir: &Path) -> PathBuf {
+    data_dir.join("recent.toml")
+}
+
 /// 設定ディレクトリがなければ作成する。
 ///
 /// 既に存在する場合は何もしない。

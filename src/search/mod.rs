@@ -17,6 +17,20 @@ pub fn run(query: &str) -> Result<(), String> {
     Ok(())
 }
 
+/// 直近使用コマンドから選択して挿入する。
+///
+/// `gclip` 単体で呼び出した場合の挙動。
+pub fn run_recent() -> Result<(), String> {
+    let matches = Registry::recent_commands(10)?;
+    ensure_recent_matches(&matches)?;
+    print_recent_matches(&matches);
+
+    let selection =
+        selection::prompt_single_selection(matches.len(), "Select recent command to insert")?;
+    handle_selection(&matches, selection)?;
+    Ok(())
+}
+
 /// zsh用の挿入ウィジェットを出力する。
 ///
 /// 生成されたスクリプトを `.zshrc` で読み込む想定。
@@ -43,11 +57,28 @@ fn ensure_matches(matches: &[String]) -> Result<(), String> {
     }
 }
 
+/// 直近使用コマンドが空でないことを確認する。
+fn ensure_recent_matches(matches: &[String]) -> Result<(), String> {
+    if matches.is_empty() {
+        Err("no recent commands found".to_string())
+    } else {
+        Ok(())
+    }
+}
+
 /// 検索結果を標準エラーへ表示する。
 ///
 /// 標準出力は挿入するコマンドのために空けておく。
 fn print_matches(query: &str, matches: &[String]) {
     eprintln!("Matches for \"{query}\":");
+    for (index, command) in matches.iter().enumerate() {
+        eprintln!("{:>2}. {}", index + 1, command);
+    }
+}
+
+/// 直近使用コマンドの一覧を標準エラーへ表示する。
+fn print_recent_matches(matches: &[String]) {
+    eprintln!("Recent commands:");
     for (index, command) in matches.iter().enumerate() {
         eprintln!("{:>2}. {}", index + 1, command);
     }
@@ -64,6 +95,7 @@ fn handle_selection(matches: &[String], selection: Option<usize>) -> Result<(), 
     };
 
     let command = command_at_index(matches, index)?;
+    Registry::record_recent(command)?;
     print_selected_command(command);
     Ok(())
 }
