@@ -10,7 +10,14 @@ cargo build
 ./target/debug/gclip --help
 ```
 
-## Shell integration (zsh)
+## Install (Homebrew)
+
+```sh
+brew tap godslew/tap
+brew install gclip-cli
+```
+
+## Setup (zsh)
 
 ```sh
 gclip --init > ~/.gclip.zsh
